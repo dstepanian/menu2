@@ -1,0 +1,79 @@
+import React, { useState } from 'react';
+
+export default function Menu() {
+    const [menuItems, setMenuItems] = useState([]);
+    const [newItem, setNewItem] = useState({
+        name: '',
+        price: '',
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewItem((prevItem) => ({
+            ...prevItem,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (newItem.name && newItem.price) {
+            setMenuItems((prevItems) => [
+                ...prevItems,
+                { name: newItem.name, price: parseFloat(newItem.price) },
+            ]);
+            setNewItem({ name: '', price: '' }); // Clear form after submitting
+        }
+    };
+
+    return (
+        <div className="container p-4">
+            <h1 className="text-2xl font-bold mb-4">Restaurant Menu</h1>
+
+            {/* Form to add new menu item */}
+            <form onSubmit={handleSubmit} className="mb-4">
+                <div className="flex gap-4">
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Menu Item Name"
+                        value={newItem.name}
+                        onChange={handleChange}
+                        className="border p-2 rounded"
+                        required
+                    />
+                    <input
+                        type="number"
+                        name="price"
+                        placeholder="Price"
+                        value={newItem.price}
+                        onChange={handleChange}
+                        className="border p-2 rounded"
+                        required
+                        min="0.01"
+                        step="0.01"
+                    />
+                    <button
+                        type="submit"
+                        className="bg-green-500 text-white p-2 rounded"
+                    >
+                        Add Item
+                    </button>
+                </div>
+            </form>
+
+            {/* Display the list of menu items */}
+            <div className="menu-list">
+                <h2 className="text-xl font-semibold mb-2">Menu Items:</h2>
+                <ul>
+                    {menuItems.map((item, index) => (
+                        <li key={index} className="flex justify-between p-2">
+                            <span>{item.name}</span>
+                            <span>${item.price.toFixed(2)}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+}
